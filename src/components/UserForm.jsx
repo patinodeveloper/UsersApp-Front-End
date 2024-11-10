@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export const UserForm = ({ handlerAddUser, initialUserForm }) => {
+export const UserForm = ({ handlerAddUser, initialUserForm, userSelected }) => {
 
     const [userForm, setUserForm] = useState(initialUserForm);
 
-    const { username, password, email } = userForm;
+    const { id, username, password, email } = userForm;
+
+    useEffect(() => {
+        setUserForm({
+            ...userSelected,
+            // password: ''
+        });
+    }, [userSelected]);
 
     const onInputChange = ({ target }) => {
         // console.log(target.value);
@@ -18,7 +25,7 @@ export const UserForm = ({ handlerAddUser, initialUserForm }) => {
     const onSubmit = (evt) => {
         evt.preventDefault();
 
-        if (!username || !password || !email) {
+        if (!username || (!password && id === 0) || !email) {
             alert('Completa los campos del formulario');
             return;
         }
@@ -40,13 +47,15 @@ export const UserForm = ({ handlerAddUser, initialUserForm }) => {
                 name="username"
                 value={username}
                 onChange={onInputChange} />
-            <input
-                type="password"
-                className="form-control my-3 w-75"
-                placeholder="Password"
-                name="password"
-                value={password}
-                onChange={onInputChange} />
+            {id > 0 ||
+                <input
+                    type="password"
+                    className="form-control my-3 w-75"
+                    placeholder="Password"
+                    name="password"
+                    value={password}
+                    onChange={onInputChange} />}
+
             <input
                 type="email"
                 className="form-control my-3 w-75"
@@ -54,10 +63,14 @@ export const UserForm = ({ handlerAddUser, initialUserForm }) => {
                 name="email"
                 value={email}
                 onChange={onInputChange} />
+            <input
+                type="hidden"
+                name="id"
+                value={id} />
             <button
                 type="submit"
-                className="btn btn-primary">
-                Crear
+                className={id > 0 ? "btn btn-warning" : "btn btn-primary"}>
+                {id > 0 ? 'Editar' : 'Crear'}
             </button>
         </form>
     )
