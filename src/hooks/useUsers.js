@@ -24,15 +24,11 @@ export const useUsers = () => {
 
     const [userSelected, setUserSelected] = useState(initialUserForm);
 
+    const [visibleForm, setVisibleForm] = useState(false);
+
     const handlerAddUser = (user) => {
         console.log(user);
-        let type;
-        
-        if (user.id === 0) {
-            type = 'addUser';
-        } else {
-            type = 'updateUser';
-        }
+        const type = (user.id === 0) ? 'addUser' : 'updateUser';
 
         dispatch({
             type: type,
@@ -44,6 +40,7 @@ export const useUsers = () => {
             (user.id ===0) ? 'El usuario ha sido creado con exito' : 'El usuario ha sido actualizado con exito',
             'success'
         )
+        handlerCloseForm();
     }
 
     const handlerRemoveUser = (id) => {
@@ -63,7 +60,7 @@ export const useUsers = () => {
                     payload: id
                 })
                 Swal.fire({
-                    title: "Usario Eliminado!",
+                    title: "Usuario Eliminado!",
                     text: "El usuario se ha eliminado exitosamente",
                     icon: "success"
                 });
@@ -73,16 +70,29 @@ export const useUsers = () => {
 
     const handlerUserSelectedForm = (user) => {
         // console.log(user);
-        setUserSelected({ ...user })
+        setVisibleForm(true);
+        setUserSelected({ ...user });
+    }
+
+    const handlerOpenForm = () => {
+        setVisibleForm(true);
+    }
+
+    const handlerCloseForm = () => {
+        setVisibleForm(false);
+        setUserSelected(initialUserForm);
     }
 
     return {
         users,
         userSelected,
         initialUserForm,
+        visibleForm,
 
         handlerAddUser,
         handlerRemoveUser,
-        handlerUserSelectedForm
+        handlerUserSelectedForm,
+        handlerOpenForm,
+        handlerCloseForm
     }
 }
