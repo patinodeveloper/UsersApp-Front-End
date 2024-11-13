@@ -1,6 +1,7 @@
 import { useReducer, useState } from "react";
 import { userReducers } from "../reducers/usersReducer";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const initialUsers = [
     {
@@ -25,6 +26,7 @@ export const useUsers = () => {
     const [userSelected, setUserSelected] = useState(initialUserForm);
 
     const [visibleForm, setVisibleForm] = useState(false);
+    const navigate = useNavigate();
 
     const handlerAddUser = (user) => {
         console.log(user);
@@ -40,6 +42,7 @@ export const useUsers = () => {
             (user.id ===0) ? 'El usuario ha sido creado con exito' : 'El usuario ha sido actualizado con exito',
             'success'
         )
+        navigate("/users");
         handlerCloseForm();
     }
 
